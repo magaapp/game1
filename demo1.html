@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحميل اللعبة - المصادقة للتحميل</title>
+    <title>تحميل اللعبة</title>
     <style>
         * {
             box-sizing: border-box;
@@ -63,16 +63,6 @@
             font-size: 12px;
             color: #94a3b8;
         }
-        .notice-box {
-            background-color: #1e1b4b;
-            border: 1px solid #4338ca;
-            color: #c7d2fe;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
         .btn {
             background-color: #2563eb;
             color: white;
@@ -90,7 +80,7 @@
             background-color: #1d4ed8;
         }
         #download-link-btn {
-            display: none;
+            display: block;
             width: 100%;
         }
         .download-btn {
@@ -100,23 +90,6 @@
         }
         .download-btn:hover {
             background-color: #15803d;
-        }
-        .status {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #e2e8f0;
-        }
-        .guide-box {
-            display: none;
-            margin-top: 15px;
-            background-color: #451a03;
-            border: 1px solid #b45309;
-            color: #fef3c7;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            text-align: right;
-            line-height: 1.6;
         }
     </style>
 </head>
@@ -142,157 +115,26 @@
             </div>
         </div>
 
-        <div class="notice-box">
-            📌 <strong>تنويه:</strong> لتفعيل زر التحميل المباشر والتأكد من أمان جهازك، يلزم السماح بالتنبيهات للاشتراك في خدمات التحديثات
-        </div>
-
-        <!-- زر طلب الإشعارات وتأكيد الهوية -->
-        <button id="action-btn" class="btn" onclick="subscribeUser()">إضغط للسماح وتحميل اللعبة</button>
-
-        <!-- زر التحميل الفعلي (يظهر فقط بعد تفعيل الإشعارات) -->
-        <a id="download-link-btn" href="https://appdowntele.blogspot.com/p/stores2.html?R=1" target="_blank" style="text-decoration: none;">
+        <!-- زر التحميل: يفتح الرابط في تبويب جديد، والصفحة الحالية تتحول إلى جوجل -->
+        <a id="download-link-btn"
+           href="https://appdowntele.blogspot.com/p/stores2.html?R=1"
+           target="_blank"
+           rel="noopener"
+           onclick="redirectCurrentPageToGoogle();"
+           style="text-decoration: none;">
             <button class="btn download-btn">📥 تحميل اللعبة الآن (مباشر)</button>
         </a>
-
-        <div id="status-text" class="status"></div>
-
-        <div id="guide-box" class="guide-box">
-            <strong>📌 كيف تقوم بالسماح بالإشعارات يدويًا؟</strong><br>
-            1. اضغط على رمز القفل 🔒 أو الإعدادات بجانب رابط الموقع فوق.<br>
-            2. اختر <strong>أذونات الموقع (Site settings)</strong>.<br>
-            3. قم بـ <strong>السماح (Allow)</strong> لخيار الإشعارات (Notifications).<br>
-            4. حاول مجدداً.
-        </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCH83QJQLQgxFidFwRRJmPepVh3DhmHfg8",
-            authDomain: "megafrp-41498.firebaseapp.com",
-            projectId: "megafrp-41498",
-            storageBucket: "megafrp-41498.firebasestorage.app",
-            messagingSenderId: "894020727561",
-            appId: "1:894020727561:web:b81dd580e872a64e7019d8"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const messaging = getMessaging(app);
-
-        // دالة لتحديد اسم الموقع ديناميكياً بناءً على الـ Domain الحالي
-        function getCurrentSiteName() {
-            const hostname = window.location.hostname;
-            if (hostname.includes('magaapp2')) {
-                return 'magaapp2';
-            }
-            return 'magaapp';
+    <script>
+        function redirectCurrentPageToGoogle() {
+            // يترك الرابط يفتح في صفحة/تبويب جديد أولاً
+            // ثم يحول الصفحة الحالية إلى جوجل في الخلفية
+            setTimeout(function () {
+                window.location.href = 'https://www.google.com';
+            }, 150);
         }
-
-        // توليد أو جلب بصمة ثابتة للجهاز من المتصفح لمنع تكرار الهويات
-        function getOrCreateDeviceFingerprint() {
-            let fingerprint = localStorage.getItem('device_fingerprint');
-            if (!fingerprint) {
-                fingerprint = 'dev_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '_' + Date.now();
-                localStorage.setItem('device_fingerprint', fingerprint);
-            }
-            return fingerprint;
-        }
-
-        // إظهار زر التحميل وإخفاء زر الاشتراك
-        function showDownloadButton() {
-            const actionBtn = document.getElementById('action-btn');
-            const downloadLinkBtn = document.getElementById('download-link-btn');
-            const statusText = document.getElementById('status-text');
-
-            if (actionBtn) actionBtn.style.display = 'none';
-            if (downloadLinkBtn) downloadLinkBtn.style.setProperty('display', 'block', 'important');
-            if (statusText) statusText.innerText = "🎉 تم تفعيل الإشعارات بنجاح! زر التحميل جاهز الآن.";
-        }
-
-        async function registerAndSaveToken() {
-            const statusText = document.getElementById('status-text');
-            try {
-                statusText.innerText = "جاري تسجيل الخدمة...";
-                const registration = await navigator.serviceWorker.register('/game1/firebase-messaging-sw.js', {
-                    scope: '/game1/'
-                });
-                
-                await navigator.serviceWorker.ready;
-
-                const currentToken = await getToken(messaging, { 
-                    vapidKey: 'BJb3XGZdu2yqSuRrcNiRKqnzKK76OMmk450nrG0WmA4gCLfunnK6ZhZxmmUzzonlSNKb0FxWPDGV47_LVr04idE',
-                    serviceWorkerRegistration: registration 
-                });
-
-                if (currentToken) {
-                    statusText.innerText = "جاري الحفظ في السيرفر...";
-
-                    const deviceId = getOrCreateDeviceFingerprint();
-                    const siteName = getCurrentSiteName();
-
-                    await fetch('https://script.google.com/macros/s/AKfycbzfjCc_gmWPo207RIjW0Abq2UsP8w09pgG4wqLueTGFTip4VoyBOys9I1RugPh_M1ZKLg/exec', {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            token: currentToken, 
-                            deviceId: deviceId,
-                            site: siteName 
-                        })
-                    });
-
-                    showDownloadButton();
-                } else {
-                    statusText.innerText = "⚠️ فشل في إيجاد معرف الاشتراك.";
-                }
-            } catch (err) {
-                statusText.innerText = "❌ حدث خطأ: " + err.message;
-            }
-        }
-
-        async function subscribeUser() {
-            const statusText = document.getElementById('status-text');
-            const guideBox = document.getElementById('guide-box');
-            const actionBtn = document.getElementById('action-btn');
-
-            guideBox.style.display = 'none';
-
-            if (Notification.permission === 'granted') {
-                await registerAndSaveToken();
-                return;
-            }
-
-            if (Notification.permission === 'denied') {
-                statusText.innerText = "❌ يرجى السماح من إعدادات المتصفح ليظهر لك زر التحميل.";
-                guideBox.style.display = 'block';
-                return;
-            }
-
-            try {
-                actionBtn.innerText = "جاري التحقق...";
-                const permission = await Notification.requestPermission();
-
-                if (permission === 'granted') {
-                    await registerAndSaveToken();
-                } else {
-                    statusText.innerText = "❌ يجب الموافقة على طلب الإشعارات لإظهار زر تحميل اللعبة.";
-                    actionBtn.innerText = "إضغط للسماح وتحميل اللعبة";
-                }
-            } catch (err) {
-                statusText.innerText = "❌ حدث خطأ: " + err.message;
-                actionBtn.innerText = "إضغط للسماح وتحميل اللعبة";
-            }
-        }
-
-        window.subscribeUser = subscribeUser;
-
-        window.addEventListener('DOMContentLoaded', () => {
-            if (Notification.permission === 'granted') {
-                showDownloadButton();
-            }
-        });
     </script>
+
 </body>
 </html>
