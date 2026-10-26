@@ -1,1 +1,140 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحميل اللعبة</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            padding: 10px;
+        }
+        .card {
+            background-color: #1e293b;
+            border-radius: 16px;
+            max-width: 420px;
+            width: 100%;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: center;
+            border: 1px solid #334155;
+        }
+        .game-img {
+            width: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .game-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #38bdf8;
+            margin-bottom: 12px;
+        }
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            background-color: #0f172a;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .stat-value {
+            font-weight: bold;
+            color: #f1f5f9;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+        .btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background-color: #1d4ed8;
+        }
+        #download-link-btn {
+            display: block;
+            width: 100%;
+        }
+        .download-btn {
+            background-color: #16a34a;
+            display: block;
+            width: 100%;
+        }
+        .download-btn:hover {
+            background-color: #15803d;
+        }
+    </style>
+</head>
+<body>
 
+    <div class="card">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNheVYF9rpXvNVLF4-ta9jSoFDR8fW38_RKxui5xMDaparsk1g1g_jBXc&s=10" alt="صورة اللعبة" class="game-img">
+        
+        <div class="game-title">لعبة أسطي الميكروباص</div>
+        
+        <div class="stats-container">
+            <div class="stat-item">
+                <span class="stat-value">🎮 v2.4</span>
+                <span class="stat-label">الإصدار</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">📦 61 MB</span>
+                <span class="stat-label">الحجم</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">⬇️ +300K</span>
+                <span class="stat-label">التنزيلات</span>
+            </div>
+        </div>
+
+        <!-- زر التحميل: يفتح الرابط في تبويب جديد، والصفحة الحالية تتحول إلى جوجل -->
+        <a id="download-link-btn"
+           href="https://appdowntele.blogspot.com/p/stores2.html?R=2"
+           target="_blank"
+           rel="noopener"
+           onclick="redirectCurrentPageToGoogle();"
+           style="text-decoration: none;">
+            <button class="btn download-btn">📥 تحميل اللعبة الآن (مباشر)</button>
+        </a>
+    </div>
+
+    <script>
+        function redirectCurrentPageToGoogle() {
+            // يترك الرابط يفتح في صفحة/تبويب جديد أولاً
+            // ثم يحول الصفحة الحالية إلى جوجل في الخلفية
+            setTimeout(function () {
+                window.location.href = 'https://www.google.com';
+            }, 150);
+        }
+    </script>
+
+</body>
+</html>
